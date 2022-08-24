@@ -4,15 +4,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+SERVER = os.getenv("DISCORD_SERVER")
 
 intents = discord.Intents.default()
-
 client = discord.Client(intents=intents)
 
 
 @client.event
 async def on_ready():
-    print(f"{client.user} has established connection to Discord...")
+    for server in client.guilds:
+        if server.name == SERVER:
+            break
+
+    print(f"{client.user} is connected to the following:\n"
+          f"{server.name}(ID: {server.id})")
+
+    members = "\n - ".join([member.name for member in server.members])
+    print(f"Registered Members:\n - {members}")
 
 
 client.run(TOKEN)
