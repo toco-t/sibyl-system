@@ -12,9 +12,8 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-    for server in client.guilds:
-        if server.name == SERVER:
-            break
+    # server = discord.utils.find(lambda s: s.name == SERVER, client.guilds)
+    server = discord.utils.get(client.guilds, name=SERVER)
 
     print(f"{client.user} is connected to the following:\n"
           f"{server.name}(ID: {server.id})")
