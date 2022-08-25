@@ -22,4 +22,15 @@ async def on_ready():
     print(f"Registered Members:\n - {members}")
 
 
+@client.event
+async def on_member_join(member):
+    await member.create_dm()
+    await member.dm_channel.send(
+        f"User authentication.../n"
+        f"Inspector: {member.name}/n"
+        f"Dominator usage approved./n"
+        f"You are a valid user."
+    )
+
+
 client.run(TOKEN)
