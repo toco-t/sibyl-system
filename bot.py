@@ -72,7 +72,7 @@ async def scan(context, target):
 
     cymatic_scan_quote = (
         f"{target}'s crime coefficient: {crime_coefficient} "
-        f"- {'under' if crime_coefficient < 100 else 'over'} {round(crime_coefficient)}\n"
+        f"- {'under' if crime_coefficient < 100 else 'over'} {round(crime_coefficient // 10) * 10}\n"
         f"{enforcement_action}"
     )
 
