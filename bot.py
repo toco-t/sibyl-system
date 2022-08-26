@@ -47,4 +47,13 @@ async def activate(context):
     await context.send(activation_quote)
 
 
+@bot.event
+async def on_error(event, *args, **kwargs):
+    with open('err.log', 'a') as f:
+        if event == 'on_message':
+            f.write(f'Unhandled message: {args[0]}\n')
+        else:
+            raise
+
+
 bot.run(TOKEN)
