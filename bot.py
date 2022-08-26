@@ -9,6 +9,7 @@ SERVER = os.getenv("DISCORD_SERVER")
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -54,6 +55,12 @@ async def on_error(event, *args, **kwargs):
             f.write(f'Unhandled message: {args[0]}\n')
         else:
             raise
+
+
+@bot.event
+async def on_command_error(context, error):
+    if isinstance(error, commands.errors.CheckFailure):
+        await context.send('You are an invalid user.')
 
 
 bot.run(TOKEN)
