@@ -2,6 +2,8 @@ import discord
 import os
 from discord.ext import commands
 from dotenv import load_dotenv
+from random import random
+
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -11,7 +13,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix=".", intents=intents)
 
 
 @bot.event
@@ -46,6 +48,48 @@ async def activate(context):
     )
 
     await context.send(activation_quote)
+
+
+@bot.command(name="scan", help=": Scan a target's Psycho-Pass")
+async def scan(context, target):
+    crime_coefficient = round(random() * 400, 1)
+
+    if crime_coefficient < 100:
+        enforcement_action = (
+            f"Enforcement action not required.\n"
+            f"The trigger is now locked..."
+        )
+    elif crime_coefficient < 300:
+        enforcement_action = (
+            f"Enforcement mode: Non-lethal Paralyzer\n"
+            f"Please aim carefully and subdue the target..."
+        )
+    else:
+        enforcement_action = (
+            f"Enforcement mode: Lethal Eliminator\n"
+            f"Please aim carefully and eliminate the target..."
+        )
+
+    cymatic_scan_quote = (
+        f"{target}'s crime coefficient: {crime_coefficient} "
+        f"- {'under' if crime_coefficient < 100 else 'over'} {round(crime_coefficient)}\n"
+        f"{enforcement_action}"
+    )
+
+    await context.send(cymatic_scan_quote)
+
+
+@bot.command(name="destroy", help=": Destroy the target")
+@commands.has_role("Inspector")
+async def destroy(context, target):
+    decomposer_quote = (
+      f"{target}'s threat judgement has been reappraised.\n"
+      f"Enforcement mode: Destroy Decomposer\n"
+      f"Target will be completely annihilated.\n"
+      f"Please proceed with maximum caution..."
+    )
+
+    await context.send(decomposer_quote)
 
 
 @bot.event
