@@ -1,6 +1,6 @@
 import discord
 import os
-from discord.ext import commands
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from random import random
 
@@ -41,13 +41,13 @@ async def on_member_join(member):
 
 @bot.command(name="activate", help=": Activates the Dominator")
 async def activate(context):
-    activation_quote = (
+    activation_message = (
         f"Activating...\n"
         f"Dominator: Portable Psychological Diagnosis and Suppression System\n"
         f"is now online."
     )
 
-    await context.send(activation_quote)
+    await context.send(activation_message)
 
 
 @bot.command(name="scan", help=": Scan a target's Psycho-Pass")
@@ -70,33 +70,33 @@ async def scan(context, target):
             f"Please aim carefully and eliminate the target..."
         )
 
-    cymatic_scan_quote = (
+    cymatic_scan_message = (
         f"{target}'s crime coefficient: {crime_coefficient} "
         f"- {'under' if crime_coefficient < 100 else 'over'} {round(crime_coefficient // 10) * 10}\n"
         f"{enforcement_action}"
     )
 
-    await context.send(cymatic_scan_quote)
+    await context.send(cymatic_scan_message)
 
 
 @bot.command(name="destroy", help=": Destroy the target")
 @commands.has_role("Inspector")
 async def destroy(context, target):
-    decomposer_quote = (
+    decomposer_message = (
       f"{target}'s threat judgement has been reappraised.\n"
       f"Enforcement mode: Destroy Decomposer\n"
       f"Target will be completely annihilated.\n"
       f"Please proceed with maximum caution..."
     )
 
-    await context.send(decomposer_quote)
+    await context.send(decomposer_message)
 
 
 @bot.event
 async def on_error(event, *args, **kwargs):
-    with open('err.log', 'a') as f:
+    with open('err.log', 'a') as error_log:
         if event == 'on_message':
-            f.write(f'Unhandled message: {args[0]}\n')
+            error_log.write(f'Unhandled message: {args[0]}\n')
         else:
             raise
 
