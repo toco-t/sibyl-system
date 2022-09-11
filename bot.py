@@ -1,19 +1,44 @@
 import discord
 import os
 from discord.ext import commands, tasks
+from discord_webhook import DiscordWebhook, DiscordEmbed
 from dotenv import load_dotenv
-from random import random
+from random import random, choice
 
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 SERVER = os.getenv("DISCORD_SERVER")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+IMG_URL = os.getenv("IMG_URL")
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix=".", intents=intents)
+
+quotes = [
+    "*'A perfect plan doesn't mean having everything go within expectations. A perfect plan is achieved when it has "
+    "the plasticity needed to flexibly deal with troubles...'*",
+    "*'I wonder what sort of criteria you use to divide people into good and evil...'*",
+    "*'I think the only time people really have value is when they act according to their own will...'*",
+    "*'Everyone just lives in their own cell, and the system tames them by giving them each their own personal "
+    "serenity...'*",
+    "*'When a man faces fear, his soul is tested. What he was born to seek… what he was born to achieve… his true "
+    "nature will become clear...'*",
+    "*'Beautiful flowers, too, eventually wither and fall. That’s the fate of all living beings...'*",
+    "*'Books are not something that you just read words in. They’re also a tool to adjust your senses...'*",
+    "*'In order to measure a person’s worth, you must do more than push them. The real way to test their worth is to "
+    "give them power. When they gain the freedom to act outside the boundaries of law and ethics, you can sometimes "
+    "see their souls...'*",
+    "*'What are human desires? What I think the most troublesome desire is for attention. It’s the source of jealousy "
+    "and relationship problems, too...'*",
+    "*'For some time researchers have understood that moderate stress has beneficial effects. It boosts the immune "
+    "system for example. Stress motivates and prepares us for action. It compels our body to survive...'*",
+    "*'The opposite of boredom is not pleasure…but excitement. People will gladly seek out any kind of excitement, "
+    "even pain...'*"
+]
 
 
 @bot.event
@@ -26,6 +51,8 @@ async def on_ready():
 
     members = "\n - ".join([member.name for member in server.members])
     print(f"Registered Members:\n - {members}")
+
+    await send_quotes.start()
 
 
 @bot.event
@@ -90,6 +117,18 @@ async def destroy(context, target):
     )
 
     await context.send(decomposer_message)
+
+
+@tasks.loop(minutes=2)
+async def send_quotes():
+    webhook = DiscordWebhook(WEBHOOK_URL, content="")
+
+    embed = DiscordEmbed(title=choice(quotes))
+    embed.set_author(name="Shogo Makishima")
+    embed.set_image(url=IMG_URL)
+
+    webhook.add_embed(embed)
+    response = webhook.execute()
 
 
 @bot.event
